@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e
+set -o pipefail
 
 ### --------------------------------------------------------------------------------------------
 ### START OF DEPLOYMENT SPECIFIC CONFIGURATION OPTIONS
@@ -26,8 +27,7 @@ POST_INSTALL_COMMANDS=(
 
 # Build archive path from AWS Codedeploy environment variables
 # The source is the temporary folder where Codedeploy stores the uncompressed archive of the current revision
-#ARCHIVE_DIR="/opt/codedeploy-agent/deployment-root/${DEPLOYMENT_GROUP_ID}/${DEPLOYMENT_ID}/deployment-archive"
-ARCHIVE_DIR="/home/teoss/dev/app"
+ARCHIVE_DIR="/opt/codedeploy-agent/deployment-root/${DEPLOYMENT_GROUP_ID}/${DEPLOYMENT_ID}/deployment-archive"
 
 # Check that all shared objects exist in the shared directory
 for OBJECT in "${SHARED_OBJECTS[@]}"; do
@@ -39,7 +39,7 @@ done
 
 # Create the new release directory
 DEPLOY_SCRIPTS_DIR=$(dirname $0)
-REVISION=$(cat "${DEPLOY_SCRIPTS_DIR}/../../deployed_revision")
+REVISION=$(cat "${DEPLOY_SCRIPTS_DIR}/../deployed_revision")
 
 NEW_REVISION_DIRECTORY="${TARGET_DEPLOY_DIR}/releases/${REVISION}"
 mkdir -p "${NEW_REVISION_DIRECTORY}"
@@ -58,9 +58,9 @@ for COMMAND in "${POST_INSTALL_COMMANDS[@]}"; do
 done
 
 # Switch current release
-(cd ${TARGET_DEPLOY_DIR}; rm current; ln -sf "releases/${REVISION}" "current")
+(cd ${TARGET_DEPLOY_DIR}; rm -f current; ln -sf "releases/${REVISION}" "current")
 
 # Delete old releases
-(cd ${TARGET_DEPLOY_DIR} && /bin/ls -1 | head -n -5 | xargs rm -rf)
+(cd ${TARGET_DEPLOY_DIR}/releases && /bin/ls -1 | head -n -5 | xargs rm -rf)
 
 #echo Done.
