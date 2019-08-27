@@ -1,0 +1,5 @@
+version: 1.0
+os: linux
+hooks:
+  AfterInstall:
+    - location: deploy/hook-scripts/hook-wrapper.sh

@@ -1,0 +1,29 @@
+{
+    "name": "soisy/codedeployer",
+    "description": "Deploy tool interacting with AWS Codedeploy",
+    "type": "library",
+    "keywords": ["soisy", "aws", "codedeploy", "deploy"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Matteo Riva",
+            "email": "matteo.riva@soisy.it",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=7.0",
+        "aws/aws-sdk-php": "^3.100"
+    },
+    "bin": [
+        "bin/deploy"
+    ],
+    "config": {
+        "bin-dir": "bin"
+    },
+    "autoload": {
+        "psr-0": {
+            "Codedeployer": "src/"
+        }
+    }
+}

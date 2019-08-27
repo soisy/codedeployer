@@ -1,0 +1,40 @@
+#!/usr/bin/env php
+<?php
+
+use Codedeployer\Deploy;
+use Composer\Autoload\ClassLoader;
+
+$file = __DIR__ . '/../../../autoload.php';
+
+if (file_exists($file)) {
+    define('CODEDEPLOYER_COMPOSER_INSTALL', $file);
+}
+
+if (!defined('CODEDEPLOYER_COMPOSER_INSTALL')) {
+    fwrite(STDERR, 'You need to set up the project dependencies using Composer');
+
+    die(1);
+}
+
+require CODEDEPLOYER_COMPOSER_INSTALL;
+
+$reflection = new \ReflectionClass(ClassLoader::class);
+$rootDir = dirname($reflection->getFileName(), 3);
+
+if (isset($argv[1]) && $argv[1] == '--setup') {
+    $packageDir = dirname(__DIR__, 1);
+
+    $deployDir = $rootDir . '/deploy/';
+
+    if (!is_dir($deployDir)) {
+        mkdir($deployDir);
+    }
+
+    exec("cp -a {$packageDir}/config/* {$deployDir}");
+
+    echo "Config files successfully installed\n";
+    exit(0);
+}
+
+$deployer = new Deploy();
+$deployer->run($rootDir);
