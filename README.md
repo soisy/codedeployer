@@ -12,12 +12,12 @@ The deployment works like this:
 This process shifts the deployment from a push system like Idephix or Deployer that requires ssh access to machines in order to rsync the code, to a poll system where the instances are notified of a new deployment request by the agent and download the application archive, running all the configured scripts to complete the deployment.
 
 ## Installation and usage
-1. Run `composer require mriva/codedeployer`
-2. Run `bin/deploy --setup`
+1. Run `composer require soisy/codedeployer`
+2. Run `./vendor/bin/deploy --setup`
 3. Create directories named as deployment groups
 4. Add scripts inside deployment groups directories
 5. Compile `config.php`
-6. Run `bin/deploy`
+6. Run `./vendor/bin/deploy`
 
 **Point 1** and **2** are self explanatory.
 
