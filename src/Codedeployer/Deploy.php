@@ -46,7 +46,7 @@ class Deploy
              * Create the application archive with the required appspec.yml file needed for the deployment
              */
             exec("cp {$rootDir}/deploy/appspec.yml {$rootDir}");
-            exec("cd {$rootDir} && tar --exclude {$archiveName} --exclude-vcs -zcf {$archiveName} .");
+            exec("cd {$rootDir} && touch {$archiveName} && tar --exclude {$archiveName} --exclude-vcs -zcf {$archiveName} .");
 
             /*
              * Send the archive to the S3 bucket
