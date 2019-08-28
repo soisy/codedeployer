@@ -25,6 +25,7 @@ POST_INSTALL_COMMANDS=(
 ### CHANGES BELOW THIS LINE SHOULD BE APPLIED TO THE CODEDEPLOYER PACKAGE AS THE CODE IS GENERAL
 ### 8<------------------------------------------------------------------------------------------
 
+
 # Build archive path from AWS Codedeploy environment variables
 # The source is the temporary folder where Codedeploy stores the uncompressed archive of the current revision
 ARCHIVE_DIR="/opt/codedeploy-agent/deployment-root/${DEPLOYMENT_GROUP_ID}/${DEPLOYMENT_ID}/deployment-archive"
@@ -63,4 +64,4 @@ done
 # Delete old releases
 (cd ${TARGET_DEPLOY_DIR}/releases && /bin/ls -1 | head -n -5 | xargs rm -rf)
 
-#echo Done.
+# Done.
