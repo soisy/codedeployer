@@ -12,10 +12,13 @@ The deployment works like this:
 This process shifts the deployment from a push system like Idephix or Deployer that requires ssh access to machines in order to rsync the code, to a poll system where the instances are notified of a new deployment request by the agent and download the application archive, running all the configured scripts to complete the deployment.
 
 ## Components
+Things that run on the deployer machine (dev or CI):
 - `bin/deploy` script: sets up autoload and executes the main PHP script
 - `Codedeployer` PHP class: executed on the dev or CI machine, sets up the archive, pushes it to S3 and calls Codedeploy APIs to initiate deployments
-- `config/appspec.yml`: configuration file required by AWS Codedeploy, is included in the archive and describes what to do during the deployment on the target machines
 - `config/config.php`: configuration file containing the name of the application and the instance groups target of the deployment, used by the `Codedeployer` class
+
+Things that run on the target machine (ec2 instance where the code is deployed)
+- `config/appspec.yml`: configuration file required by AWS Codedeploy, is included in the archive and describes what to do during the deployment on the target machines
 - `config/hook-scripts/hook-wrapper.sh`: wrapper script called by `appspec.yml`, is executed on the destination ec2 machines, calls deployments scripts and provides logging; requires the `ts` tool for timestamping
 - `config/hook-scripts/rsync_exclude`: list of files and directories excluded from the final copy
 - `config/hook-scripts/example-scripts`: premade scripts that cover the most used deployment cases: simple copy and rotating releases with "current" symlink and shared objects
