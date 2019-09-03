@@ -19,7 +19,7 @@ class Deploy
                 throw new \Exception('Application name is missing, add to config.php');
             }
 
-            if (empty($config['applicationName'])) {
+            if (empty($config['deploymentGroups'])) {
                 throw new \Exception('Deployment groups not configured, add to config.php');
             }
 
@@ -62,7 +62,7 @@ class Deploy
             /*
              * Start deployment for every configured deployed group in the current application
              */
-            foreach ($config['applicationName'] as $deploymentGroup) {
+            foreach ($config['deploymentGroups'] as $deploymentGroup) {
                 $deploymentResult = $codedeployClient->createDeployment([
                     'applicationName'     => $config['applicationName'],
                     'deploymentGroupName' => $deploymentGroup,
