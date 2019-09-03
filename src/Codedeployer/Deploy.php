@@ -10,16 +10,16 @@ class Deploy
 {
     public function run($rootDir)
     {
-        require $rootDir . '/deploy/config.php';
+        $config = require $rootDir . '/deploy/config.php';
 
         $exitCode = 1;
 
         try {
-            if (empty($applicationName)) {
+            if (empty($config['applicationName'])) {
                 throw new \Exception('Application name is missing, add to config.php');
             }
 
-            if (empty($deploymentGroups)) {
+            if (empty($config['applicationName'])) {
                 throw new \Exception('Deployment groups not configured, add to config.php');
             }
 
@@ -33,13 +33,13 @@ class Deploy
             $archiveName = "{$revision}.tgz";
 
             $s3Client = new S3Client([
-                'region'  => 'eu-west-1',
-                'version' => 'latest',
+                'region'  => $config['awsRegion'],
+                'version' => $config['awsVersion'],
             ]);
 
             $codedeployClient = new CodeDeployClient([
-                'region'  => 'eu-west-1',
-                'version' => 'latest',
+                'region'  => $config['awsRegion'],
+                'version' => $config['awsVersion'],
             ]);
 
             /*
@@ -52,8 +52,8 @@ class Deploy
              * Send the archive to the S3 bucket
              */
             $s3Client->putObject([
-                'Bucket'     => 'it-soisy-deploy',
-                'Key'        => "{$applicationName}/{$archiveName}",
+                'Bucket'     => $config['awsS3Bucket'],
+                'Key'        => "{$config['applicationName']}/{$archiveName}",
                 'SourceFile' => "{$rootDir}/{$archiveName}",
             ]);
 
@@ -62,15 +62,15 @@ class Deploy
             /*
              * Start deployment for every configured deployed group in the current application
              */
-            foreach ($deploymentGroups as $deploymentGroup) {
+            foreach ($config['applicationName'] as $deploymentGroup) {
                 $deploymentResult = $codedeployClient->createDeployment([
-                    'applicationName'     => $applicationName,
+                    'applicationName'     => $config['applicationName'],
                     'deploymentGroupName' => $deploymentGroup,
                     'revision'            => [
                         'revisionType' => 'S3',
                         's3Location'   => [
-                            'bucket'     => 'it-soisy-deploy',
-                            'key'        => "{$applicationName}/{$archiveName}",
+                            'bucket'     => $config['awsS3Bucket'],
+                            'key'        => "{$config['applicationName']}/{$archiveName}",
                             'bundleType' => 'tgz',
                         ]
                     ],
