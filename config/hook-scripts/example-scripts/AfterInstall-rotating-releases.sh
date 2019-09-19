@@ -17,7 +17,7 @@ SHARED_OBJECTS=(
 # Commands to be executed after the code is copied in the target release directory
 # The working directory when running these commands is set to the new release directory
 # Enter one per line
-# IMPORTANT: enclose commands in double quotes if they containe more than one words (commands usually do)
+# IMPORTANT: enclose commands in double quotes if they contain more than one word (commands usually do)
 POST_INSTALL_COMMANDS=(
 )
 
@@ -33,7 +33,7 @@ ARCHIVE_DIR="/opt/codedeploy-agent/deployment-root/${DEPLOYMENT_GROUP_ID}/${DEPL
 # Check that all shared objects exist in the shared directory
 for OBJECT in "${SHARED_OBJECTS[@]}"; do
   if [ ! -d "${TARGET_DEPLOY_DIR}/shared/${OBJECT}" ] && [ ! -f "${TARGET_DEPLOY_DIR}/shared/${OBJECT}" ]; then
-    echo "Shared object '${i}' does not exist."
+    echo "Shared object '${OBJECT}' does not exist."
     exit 1
   fi
 done
