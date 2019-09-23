@@ -30,7 +30,13 @@ if (isset($argv[1]) && $argv[1] == '--setup') {
         mkdir($deployDir);
     }
 
-    exec("cp -a {$packageDir}/config/* {$deployDir}");
+//    exec("cp -a {$packageDir}/config/* {$deployDir}");
+    exec("rsync -a --exclude={$packageDir}/config/rsync_exclude {$packageDir}/config/ {$deployDir}");
+    if (!file_exists("{$deployDir}/hook-scripts/rsync_exclude")) {
+        exec("cp -a {$packageDir}/config/hook-scripts/rsync_exclude* {$deployDir}/hook-scripts/");
+    } else {
+        echo "rsync_exclude file already present, skipping\n";
+    }
 
     echo "Config files successfully installed\n";
     exit(0);
