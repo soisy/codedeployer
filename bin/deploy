@@ -39,6 +39,13 @@ if (isset($argv[1]) && $argv[1] == '--setup') {
         echo "rsync_exclude file already present, skipping\n";
     }
 
+    // Don't overwrite config.php if it exists
+    if (!file_exists("{$deployDir}/config.php")) {
+        exec("cp -a {$packageDir}/config/config.php* {$deployDir}/");
+    } else {
+        echo "config.php file already present, skipping\n";
+    }
+
     echo "Config files successfully installed\n";
     exit(0);
 }
