@@ -20,8 +20,9 @@ Things that run on the deployer machine (dev or CI):
 Things that run on the target machine (ec2 instance where the code is deployed)
 - `config/appspec.yml`: configuration file required by AWS Codedeploy, is included in the archive and describes what to do during the deployment on the target machines
 - `config/hook-scripts/hook-wrapper.sh`: wrapper script called by `appspec.yml`, is executed on the destination ec2 machines, calls deployments scripts and provides logging; requires the `ts` tool for timestamping
+- `config/hook-scripts/instance-template`: template directory containing premade scripts 
+- `config/hook-scripts/strategies`: scripts that execute predefined deploy strategies: rotating releases and simple copy
 - `config/hook-scripts/rsync_exclude`: list of files and directories excluded from the final copy
-- `config/hook-scripts/example-scripts`: premade scripts that cover the most used deployment cases: simple copy and rotating releases with "current" symlink and shared objects
 
 ## Installation and usage
 1. Run `composer require soisy/codedeployer`
@@ -33,7 +34,8 @@ Things that run on the target machine (ec2 instance where the code is deployed)
 
 **Point 1** and **2** are self explanatory.
 
-**Point 3** requires you to create a directory under `deploy/hook-script` for each instance group you want to deploy to.
+**Point 3** requires you to create a directory under `deploy/hook-script` for each instance group you want to deploy to. You should duplicate the `instance-template` directory, change its name to the match the deployment group and adjust its content.
+
 For example, if you wish to deploy to `ec2-alfa` and `ec2-beta` instance groups, the tree will look like this:
 
 ```
@@ -64,8 +66,6 @@ deploy/
 ```
 
 these script will be run by the main `hook-wrapper.sh` which is defined as the main hook in `appspec.yml`
-
-There are two example scripts ready to be used with minimal configuration for simple copy and rotating releases deploy in the `config/hook-scripts/example-scripts/` directory.
 
 **Point 5** only requires you to compile a few application related options, the file should be self explanatory as well.
 
