@@ -32,7 +32,7 @@ if (isset($argv[1]) && $argv[1] == '--setup') {
 
     // Copy all files contained in the config directory to the project deploy directory
     // Don't overwrite rsync_exclude if it exists
-    exec("rsync -a --exclude 'hook-scripts/rsync_exclude' {$packageDir}/config/ {$deployDir}");
+    exec("rsync -a --exclude 'hook-scripts/rsync_exclude' --exclude 'config.php' {$packageDir}/config/ {$deployDir}");
     if (!file_exists("{$deployDir}/hook-scripts/rsync_exclude")) {
         exec("cp -a {$packageDir}/config/hook-scripts/rsync_exclude* {$deployDir}/hook-scripts/");
     } else {
