@@ -23,7 +23,7 @@ NEW_REVISION_DIRECTORY="${TARGET_DEPLOY_DIR}/releases/${REVISION}"
 mkdir -p "${NEW_REVISION_DIRECTORY}"
 
 # Copy files to the new directory
-rsync -a --exclude-from="${ARCHIVE_DIR}/deploy/hook-scripts/rsync_exclude" "${ARCHIVE_DIR}/" "${NEW_REVISION_DIRECTORY}"
+rsync -a --exclude-from="${ARCHIVE_DIR}/deploy/hook-scripts/rsync_exclude" "${ARCHIVE_DIR}/${ARCHIVE_SOURCE_SUBDIR}/" "${NEW_REVISION_DIRECTORY}"
 
 # Symlink shared objects
 for i in "${SHARED_OBJECTS[@]}"; do

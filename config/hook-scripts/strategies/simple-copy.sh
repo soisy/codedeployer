@@ -13,7 +13,7 @@ then
     exit 1
 fi
 
-rsync -a --exclude-from="${ARCHIVE_DIR}/deploy/hook-scripts/rsync_exclude" "${ARCHIVE_DIR}/" "${TARGET_DEPLOY_DIR}"
+rsync -a --exclude-from="${ARCHIVE_DIR}/deploy/hook-scripts/rsync_exclude" "${ARCHIVE_DIR}/${ARCHIVE_SOURCE_SUBDIR}/" "${TARGET_DEPLOY_DIR}"
 
 # Execute application scripts
 for COMMAND in "${POST_INSTALL_COMMANDS[@]}"; do

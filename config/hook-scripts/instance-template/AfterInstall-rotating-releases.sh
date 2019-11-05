@@ -6,6 +6,11 @@ set -o pipefail
 ### --------------------------------------------------------------------------------------------
 ### START OF DEPLOYMENT SPECIFIC CONFIGURATION OPTIONS
 
+# Set this to the local relative path of the source to be deployed if it's not the root of the project
+# The local path is relative to the level where the composer.json containing codedeployer is located
+ARCHIVE_SOURCE_SUBDIR=
+
+# Set this to the target directory on the remote machine where the source will be deployed
 TARGET_DEPLOY_DIR=
 
 # Objects (files and directories) shared between releases are stored in the "shared" directory

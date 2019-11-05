@@ -65,9 +65,9 @@ deploy/
 
 ```
 
-these script will be run by the main `hook-wrapper.sh` which is defined as the main hook in `appspec.yml`
+these scripts will be run by the wrapper script `hook-wrapper.sh` which is defined as the main hook in `appspec.yml`
 
-**Point 5** only requires you to compile a few application related options, the file should be self explanatory as well.
+**Point 5** only requires you to compile a few application related options, the file should be self explanatory.
 
 ## TODO
 - refactor config.php with some other form of configuration
