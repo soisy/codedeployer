@@ -3,11 +3,25 @@
 namespace Codedeployer;
 
 use Throwable;
-use Aws\CodeDeploy\CodeDeployClient;
 use Aws\S3\S3Client;
+use Aws\CodeDeploy\CodeDeployClient;
 
 class Deploy
 {
+
+    private function hasSucceeded($deploymentsStatus)
+    {
+        return !array_filter($deploymentsStatus, function ($info) {
+            $ok = 0;
+            $ok += !!is_null($info['completeTime']);
+            $ok += !!array_filter((array) $info['deploymentOverview'], function ($count, $key) {
+                return $key != 'Succeeded' && $count > 0;
+            }, ARRAY_FILTER_USE_BOTH);
+            
+            return $ok;
+        });
+    }
+
     public function run($rootDir)
     {
         $config = require $rootDir . '/deploy/config.php';
@@ -87,6 +101,10 @@ class Deploy
 
             $deploymentsStatus = [];
 
+            /**
+             * 
+             */
+
             /*
              * Poll deployment API to get the status of all running deployments waiting for completeTime to not be null.
              * When completeTime is not null for every deployment, the whole process ends.
@@ -104,6 +122,8 @@ class Deploy
                     $deploymentsStatus[$deploymentInfo['deploymentGroupName']] = [
                         'status'       => $deploymentInfo['status'],
                         'completeTime' => $deploymentInfo['completeTime'] ?? null,
+                        'errorInformation' => $deploymentInfo['errorInformation'] ?? null,
+                        'deploymentOverview' => $deploymentInfo['deploymentOverview'] ?? null,
                     ];
                 }
 
@@ -117,13 +137,17 @@ class Deploy
             }
 
             echo "\n";
-            $failed = false;
+            $failed = !$this->hasSucceeded($deploymentsStatus);
 
-            foreach ($deploymentsStatus as $group => $status) {
-                echo "{$group} {$status['status']} at {$status['completeTime']}\n";
-                if ($status['status'] !== 'Succeeded') {
-                    $failed = true;
+            $errorMessages = array_reduce($deploymentsStatus, function ($acc, $item) {
+                if ($item['errorInformation']) {
+                    return $acc .= "\n" . $item['errorInformation']->code. ": ". $item['errorInformation']->message;
                 }
+                return $acc;
+            }, "");
+
+            if ($errorMessages) {
+                throw new \Exception($errorMessages);
             }
 
             if (!$failed) {
