@@ -139,20 +139,21 @@ class Deploy
             echo "\n";
             $failed = !$this->hasSucceeded($deploymentsStatus);
 
-            $errorMessages = array_reduce($deploymentsStatus, function ($acc, $item) {
-                if ($item['errorInformation']) {
-                    return $acc .= "\n" . $item['errorInformation']->code. ": ". $item['errorInformation']->message;
-                }
-                return $acc;
-            }, "");
-
-            if ($errorMessages) {
-                throw new \Exception($errorMessages);
-            }
-
             if (!$failed) {
                 $exitCode = 0;
+            } else {
+                $errorMessages = array_reduce($deploymentsStatus, function ($acc, $item) {
+                    if ($item['errorInformation']) {
+                        return $acc .= "\n" . $item['errorInformation']->code. ": ". $item['errorInformation']->message;
+                    }
+                    return $acc;
+                }, "");
+
+                if ($errorMessages) {
+                    throw new \Exception($errorMessages);
+                }
             }
+
         } catch (Throwable $e) {
             echo $e->getMessage(), "\n";
             exit(1);
