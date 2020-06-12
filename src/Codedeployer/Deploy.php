@@ -101,10 +101,6 @@ class Deploy
 
             $deploymentsStatus = [];
 
-            /**
-             * 
-             */
-
             /*
              * Poll deployment API to get the status of all running deployments waiting for completeTime to not be null.
              * When completeTime is not null for every deployment, the whole process ends.
