@@ -11,15 +11,24 @@ class Deploy
 
     private function hasSucceeded($deploymentsStatus)
     {
-        return !array_filter($deploymentsStatus, function ($info) {
+        return !array_filter($deploymentsStatus, function ($info, $group) {
+            $status = "{$group} \n";
+
             $ok = 0;
             $ok += !!is_null($info['completeTime']);
-            $ok += !!array_filter((array) $info['deploymentOverview'], function ($count, $key) {
+            $ok += !!array_filter((array) $info['deploymentOverview'], function ($count, $key) use (&$status) {
+                if ($count > 0) {
+                    $status .= "\t{$key}: {$count}\n";
+                }
+
                 return $key != 'Succeeded' && $count > 0;
             }, ARRAY_FILTER_USE_BOTH);
             
+            $status .= "\tat {$info['completeTime']}\n";
+            echo $status;
+
             return $ok;
-        });
+        }, ARRAY_FILTER_USE_BOTH);
     }
 
     public function run($rootDir)
@@ -147,6 +156,8 @@ class Deploy
 
                 if ($errorMessages) {
                     throw new \Exception($errorMessages);
+                } else {
+                    throw new \Exception("Deployment failed with no error message");
                 }
             }
 
