@@ -149,7 +149,7 @@ class Deploy
             } else {
                 $errorMessages = array_reduce($deploymentsStatus, function ($acc, $item) {
                     if ($item['errorInformation']) {
-                        return $acc .= "\n" . $item['errorInformation']->code. ": ". $item['errorInformation']->message;
+                        return $acc .= "\n" . $item['errorInformation']['code']. ": ". $item['errorInformation']['message'];
                     }
                     return $acc;
                 }, "");
