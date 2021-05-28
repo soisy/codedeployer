@@ -50,5 +50,11 @@ if (isset($argv[1]) && $argv[1] == '--setup') {
     exit(0);
 }
 
+$deploymentGroups = [];
+
+if (isset($argv[1])) {
+    $deploymentGroups = explode(',', $argv[1]);
+}
+
 $deployer = new Deploy();
-$deployer->run($rootDir);
+$deployer->run($rootDir, $deploymentGroups);

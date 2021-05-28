@@ -31,7 +31,7 @@ class Deploy
         }, ARRAY_FILTER_USE_BOTH);
     }
 
-    public function run($rootDir)
+    public function run($rootDir, $deploymentGroups = [])
     {
         $config = require $rootDir . '/deploy/config.php';
 
@@ -89,8 +89,14 @@ class Deploy
 
             /*
              * Start deployment for every configured deployed group in the current application
+             * or for the ones provided as argument if present
              */
-            foreach ($config['deploymentGroups'] as $deploymentGroup) {
+
+            if (empty($deploymentGroups)) {
+                $deploymentGroups = $config['deploymentGroups'];
+            }
+
+            foreach ($deploymentGroups as $deploymentGroup) {
                 $deploymentResult = $codedeployClient->createDeployment([
                     'applicationName'     => $config['applicationName'],
                     'deploymentGroupName' => $deploymentGroup,
