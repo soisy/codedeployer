@@ -49,7 +49,8 @@ class Deploy
             /*
              * Get current git commit hash and save it to file
              */
-            $revision = trim(shell_exec("git rev-parse --short HEAD"));
+            $revision = getenv('GITHUB_SHA');
+
             $timestampedRevision = date('Ymd_His') . "_{$revision}";
             shell_exec("echo {$timestampedRevision} > {$rootDir}/deploy/deployed_revision");
 
